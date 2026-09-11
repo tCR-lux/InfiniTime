@@ -332,17 +332,17 @@ void WatchFacePrideFlag::UpdateScreen(const Pinetime::Controllers::Settings::Pri
     case Pinetime::Controllers::Settings::PrideFlag::Rainbow:
       UseFlagData(rainbowColorsData);
       break;
-    case Pinetime::Controllers::Settings::PrideFlag::Gay:
-      UseFlagData(gayFlagData);
-      break;
-    case Pinetime::Controllers::Settings::PrideFlag::Trans:
-      UseFlagData(transFlagData);
-      break;
-    case Pinetime::Controllers::Settings::PrideFlag::Bi:
-      UseFlagData(biFlagData);
-      break;
-    case Pinetime::Controllers::Settings::PrideFlag::Lesbian:
-      UseFlagData(lesbianFlagData);
-      break;
+    //case Pinetime::Controllers::Settings::PrideFlag::Gay:
+    //  UseFlagData(gayFlagData);
+    //  break;
+    //case Pinetime::Controllers::Settings::PrideFlag::Trans:
+    //  UseFlagData(transFlagData);
+    //  break;
+    //case Pinetime::Controllers::Settings::PrideFlag::Bi:
+    //  UseFlagData(biFlagData);
+    //  break;
+    //case Pinetime::Controllers::Settings::PrideFlag::Lesbian:
+    //  UseFlagData(lesbianFlagData);
+    //  break;
   }
 }
