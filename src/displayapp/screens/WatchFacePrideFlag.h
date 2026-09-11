@@ -83,7 +83,7 @@ namespace Pinetime {
     template <>
     struct WatchFaceTraits<WatchFace::PrideFlag> {
       static constexpr WatchFace watchFace = WatchFace::PrideFlag;
-      static constexpr const char* name = "Pride Flag";
+      static constexpr const char* name = "Flags";
 
       static Screens::Screen* Create(AppControllers& controllers) {
         return new Screens::WatchFacePrideFlag(controllers.dateTimeController,
