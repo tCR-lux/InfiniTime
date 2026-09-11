@@ -1,5 +1,6 @@
+# Always derive USERAPP_TYPES from ENABLE_USERAPPS (or defaults) - Do not depend on CACHE
 if(DEFINED ENABLE_USERAPPS)
-    set(USERAPP_TYPES ${ENABLE_USERAPPS} CACHE STRING "List of user apps to build into the firmware")
+    set(USERAPP_TYPES ${ENABLE_USERAPPS})
 else ()
     set(DEFAULT_USER_APP_TYPES "Apps::StopWatch")
     set(DEFAULT_USER_APP_TYPES "${DEFAULT_USER_APP_TYPES}, Apps::Alarm")
@@ -15,12 +16,13 @@ else ()
     set(DEFAULT_USER_APP_TYPES "${DEFAULT_USER_APP_TYPES}, Apps::Navigation")
     set(DEFAULT_USER_APP_TYPES "${DEFAULT_USER_APP_TYPES}, Apps::Calculator")
     set(DEFAULT_USER_APP_TYPES "${DEFAULT_USER_APP_TYPES}, Apps::Weather")
-    #set(DEFAULT_USER_APP_TYPES "${DEFAULT_USER_APP_TYPES}, Apps::Motion")
-    set(USERAPP_TYPES "${DEFAULT_USER_APP_TYPES}" CACHE STRING "List of user apps to build into the firmware")
+    set(DEFAULT_USER_APP_TYPES "${DEFAULT_USER_APP_TYPES}, Apps::Motion")
+    set(USERAPP_TYPES "${DEFAULT_USER_APP_TYPES}")
 endif ()
 
+# Always derive WATCHFACE_TYPES from ENABLE_WATCHFACES (or defaults) - Do not depend on CACHE
 if(DEFINED ENABLE_WATCHFACES)
-    set(WATCHFACE_TYPES ${ENABLE_WATCHFACES} CACHE STRING "List of watch faces to build into the firmware")
+    set(WATCHFACE_TYPES ${ENABLE_WATCHFACES})
 else()
     set(DEFAULT_WATCHFACE_TYPES "WatchFace::Digital")
     set(DEFAULT_WATCHFACE_TYPES "${DEFAULT_WATCHFACE_TYPES}, WatchFace::Analog")
@@ -29,8 +31,12 @@ else()
     set(DEFAULT_WATCHFACE_TYPES "${DEFAULT_WATCHFACE_TYPES}, WatchFace::Infineat")
     set(DEFAULT_WATCHFACE_TYPES "${DEFAULT_WATCHFACE_TYPES}, WatchFace::CasioStyleG7710")
     set(DEFAULT_WATCHFACE_TYPES "${DEFAULT_WATCHFACE_TYPES}, WatchFace::PrideFlag")
-    set(WATCHFACE_TYPES "${DEFAULT_WATCHFACE_TYPES}" CACHE STRING "List of watch faces to build into the firmware")
+    set(WATCHFACE_TYPES "${DEFAULT_WATCHFACE_TYPES}")
 endif()
+
+# CACHE them in second step
+set(USERAPP_TYPES "${USERAPP_TYPES}" CACHE STRING "List of user apps to build into the firmware" FORCE)
+set(WATCHFACE_TYPES "${WATCHFACE_TYPES}" CACHE STRING "List of watch faces to build into the firmware" FORCE)
 
 add_library(infinitime_apps INTERFACE)
 target_sources(infinitime_apps INTERFACE "${CMAKE_CURRENT_BINARY_DIR}/Apps.h")
@@ -38,3 +44,18 @@ target_include_directories(infinitime_apps INTERFACE "${CMAKE_CURRENT_BINARY_DIR
 
 # Generate the list of user apps to be compiled into the firmware
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Apps.h.in ${CMAKE_CURRENT_BINARY_DIR}/Apps.h)
+
+# Force CMake to reconfigure when the app/watchface lists change to avoid staled CACHE inconsistencies
+# in the declared numbers of WatchFaces and Apps
+set(APP_CONFIG_STAMP_CONTENT
+  "USERAPP_TYPES=${USERAPP_TYPES}\nWATCHFACE_TYPES=${WATCHFACE_TYPES}\n"
+)
+
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/app_config.stamp" "${APP_CONFIG_STAMP_CONTENT}")
+
+set_property(
+  DIRECTORY
+  APPEND
+  PROPERTY CMAKE_CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_BINARY_DIR}/app_config.stamp"
+)
