@@ -71,10 +71,15 @@ namespace {
   constexpr lv_color_t lightGreen = LV_COLOR_MAKE(0x98, 0xe8, 0xc1);
   constexpr lv_color_t indigo = LV_COLOR_MAKE(0x50, 0x49, 0xcc);
   constexpr lv_color_t steelBlue = LV_COLOR_MAKE(0x3d, 0x1a, 0x78);
+  constexpr lv_color_t olive = LV_COLOR_MAKE(0xb0, 0xb0, 0x00);
+  constexpr std::array<lv_color_t, 3> luxColors {LV_COLOR_RED, LV_COLOR_WHITE, lightBlue};
+  constexpr std::array<lv_color_t, 9> rainbowColors {LV_COLOR_RED, orange, LV_COLOR_YELLOW, olive, lightGreen, lightBlue, steelBlue, indigo, darkPurple};
   constexpr std::array<lv_color_t, 7> gayColours {darkGreen, cyan, lightGreen, LV_COLOR_WHITE, lightBlue, indigo, steelBlue};
   constexpr std::array<lv_color_t, 5> transColours {lightBlue, lightPink, LV_COLOR_WHITE, lightPink, lightBlue};
   constexpr std::array<lv_color_t, 5> biColours {hotPink, hotPink, grayPurple, darkBlue, darkBlue};
   constexpr std::array<lv_color_t, 7> lesbianColours {LV_COLOR_RED, orange, lightOrange, LV_COLOR_WHITE, lightPurple, darkPurple, magenta};
+  constexpr PrideFlagData luxColorsData(luxColors, LV_COLOR_BLACK, LV_COLOR_BLACK, LV_COLOR_WHITE);
+  constexpr PrideFlagData rainbowColorsData(rainbowColors, LV_COLOR_BLACK, LV_COLOR_BLACK, LV_COLOR_WHITE);
   constexpr PrideFlagData gayFlagData(gayColours, LV_COLOR_BLACK, LV_COLOR_BLACK, LV_COLOR_WHITE);
   constexpr PrideFlagData transFlagData(transColours, LV_COLOR_WHITE, LV_COLOR_BLACK, LV_COLOR_WHITE);
   constexpr PrideFlagData biFlagData(biColours, LV_COLOR_BLACK, LV_COLOR_WHITE, LV_COLOR_BLACK);
@@ -321,6 +326,12 @@ void WatchFacePrideFlag::UpdateScreen(const Pinetime::Controllers::Settings::Pri
   }
   backgroundSections.clear();
   switch (prideFlag) {
+    case Pinetime::Controllers::Settings::PrideFlag::LuxFlag:
+      UseFlagData(luxColorsData);
+      break;
+    case Pinetime::Controllers::Settings::PrideFlag::Rainbow:
+      UseFlagData(rainbowColorsData);
+      break;
     case Pinetime::Controllers::Settings::PrideFlag::Gay:
       UseFlagData(gayFlagData);
       break;
